@@ -1,6 +1,6 @@
 /** Safe outbound composers. These never send or claim a message was sent. */
 export const OUTREACH_CHANNELS=Object.freeze(['Email','WhatsApp','WeChat','LinkedIn']);
-const mailPattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const mailPattern=/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
 export function normalizeWhatsApp(value){
   const raw=String(value||'').trim();
   if(!/^\+?[\d ()-]+$/.test(raw))return null;
