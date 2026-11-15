@@ -1,0 +1,40 @@
+import{stages}from'./domain.mjs';
+export type Field={key:string,label:string,type?:string,options?:string[],ref?:string,required?:boolean};
+const names:Record<string,string>={buyer_id:'Buyer',product_id:'Product',rfq_id:'RFQ',order_id:'Order',inventory_id:'Stock lot',supplier_id:'Supplier',quote_id:'Quotation',owner_id:'Owner',quantity_kg:'Quantity (kg)',carton_net_kg:'Carton net weight (kg)',source_url:'Evidence URL',verified_on:'Verification date',whatsapp:'Verified WhatsApp number',commission_rate:'Commission rate / fixed fee',fx:'Cost currency per 1 selling currency'};
+export const label=(s:string)=>names[s]||s.replaceAll('_',' ').replace(/\b\w/g,x=>x.toUpperCase());
+const refs={buyer_id:'buyers',product_id:'products',rfq_id:'rfqs',order_id:'orders',inventory_id:'inventory',supplier_id:'suppliers',quote_id:'quotes',owner_id:'profiles'};
+const areas=new Set(['notes','body','research_notes','verification_notes','routing_notes','outreach_gate','instructions','quality','treatment','reliability_notes','commission_agreement','product_interests','next_action','description']);
+const numbers=new Set(['score','capacity_kg','moq_kg','containers','quantity_kg','target_price','unit_price','additional_cost','lead_days','glaze_percent','total','actual_cost','amount','carton_net_kg','temperature_c','recurring_days','commission_rate','commission_quantity_kg','estimated_cost','probability']);
+const dates=new Set(['verified_on','checked_on','due_on','valid_until','received_on','production_date','expected_delivery','expected_close','etd','eta']);
+const opts={stage:stages,priority:['Normal','High','Urgent'],verification_status:['Unverified','Source recorded','Verified'],role:['admin','sales','procurement','management'],incoterm:['EXW','FOB','CFR','CIF'],currency:['USD','EUR','INR','GBP','CNY','KRW','AED'],quality_status:['Hold','Released','Rejected'],direction:['Draft','Outbound','Inbound','Internal'],channel:['Email','WhatsApp','WeChat','LinkedIn','Internal','Follow-up'],shipment_mode:['Unspecified','Mixed container','Separate containers'],commercial_model:['Principal','Agency'],commission_method:['Per kg','Percentage','Fixed'],availability_status:['Unverified','Verified','Unavailable']};
+export function fields(list:string):Field[]{return list.split(' ').map(k=>{const required=k.endsWith('!'),key=k.replace('!','');return{key,label:label(key),required,ref:refs[key],options:opts[key],type:refs[key]||opts[key]?'select':areas.has(key)?'textarea':numbers.has(key)?'number':dates.has(key)?'date':['happened_at','measured_at'].includes(key)?'datetime-local':['opt_out','active','zig_zag','require_approval'].includes(key)?'checkbox':key==='email'?'email':'text'}})}
+export const models:Record<string,{title:string,fields:Field[],cols:string[],readonly?:boolean}>={};
+function add(key,title,list,cols,readonly=false){models[key]={title,fields:fields(list),cols:cols.split(' '),readonly}}
+add('buyers','Buyers','name! country! city website business_type email phone whatsapp wechat linkedin product_interests stage priority score verification_status source_url verified_on verification_notes research_notes next_action routing_notes outreach_gate opt_out owner_id','name country product_interests stage priority verification_status');
+add('contacts','Contacts','buyer_id! name role email phone whatsapp wechat linkedin source_url notes','name role email phone buyer_id');
+add('research_sources','Research sources','buyer_id! title url checked_on notes','title url checked_on buyer_id');
+add('communications','Communication history','buyer_id! channel direction subject body! language evidence happened_at','buyer_id direction channel subject happened_at');
+add('tasks','Tasks & follow-ups','title! buyer_id due_on! priority owner_id recurring_days notes','title buyer_id due_on priority status');
+add('products','Product catalog','name! species catch_method notes','name species catch_method');
+add('suppliers','Suppliers','name! location products contact_name email phone whatsapp wechat website certifications verification_source verified_on capacity_kg moq_kg payment_terms reliability_notes','name location products certifications verified_on');
+add('rfqs','Buyer requirements','title! buyer_id! status currency incoterm destination shipment_mode containers payment_terms certifications delivery_window instructions owner_id','title buyer_id status destination shipment_mode');
+add('rfq_items','Requirement lines','rfq_id! product_id! species form grade catch_method glaze_percent weight_basis packing treatment quality quantity_kg! target_price container_group','rfq_id product_id grade quantity_kg target_price container_group');
+add('supplier_offers','Supplier offers','supplier_id! rfq_id product_id! species form grade packing certifications quantity_kg! unit_price! currency incoterm additional_cost lead_days availability_status verified_on valid_until payment_terms notes','supplier_id product_id grade unit_price currency availability_status');
+add('quotes','Quotations','buyer_id! rfq_id currency incoterm destination! payment_terms shipment_window valid_until! estimated_cost probability expected_close notes','number buyer_id total currency status created_at',true);
+add('quote_items','Quotation lines','product_id! description! quantity_kg! unit_price! packing container_group','product_id description quantity_kg unit_price packing',true);
+add('orders','Orders','buyer_id! po_reference! acceptance_reference! status currency actual_cost payment_terms expected_delivery commercial_model commission_method commission_rate commission_quantity_kg commission_payer commission_agreement','po_reference buyer_id total currency commercial_model status');
+add('order_items','Order lines','order_id! product_id! description quantity_kg! unit_price! packing','order_id product_id quantity_kg unit_price');
+add('payments','Payments','order_id! amount! currency received_on! reference! notes','order_id amount currency received_on reference');
+add('shipments','Shipments','order_id! container_number bl_reference vessel port_origin port_destination etd eta status notes','order_id container_number vessel status eta');
+add('inventory','Inventory & quality','product_id! lot_number! species grade form quality_grade glaze_percent weight_basis packing iwp zig_zag carton_net_kg! location production_date quality_status notes','lot_number product_id grade on_hand_kg quality_status location');
+add('stock_movements','Stock movements','','inventory_id quantity_kg reason order_id created_at',true);
+add('reservations','Stock reservations','','inventory_id order_id quantity_kg status created_at',true);
+add('temperature_logs','Temperature records','inventory_id! temperature_c! measured_at! location notes','inventory_id temperature_c measured_at notes');
+add('documents','Documents','','name size_bytes buyer_id order_id created_at',true);
+add('costings','Saved costings','','name created_at',true);
+add('import_batches','Import results','','name created_at',true);
+add('profiles','Team members','display_name role active','display_name email role active');
+add('memberships','Authorized emails','email! role active','email role active');
+add('audit_log','Audit trail','','table_name record_id action actor created_at',true);
+
+models.contacts.fields=models.contacts.fields.map(f=>f.key==='role'?{...f,type:'text',options:undefined,label:'Job title / team'}:f);

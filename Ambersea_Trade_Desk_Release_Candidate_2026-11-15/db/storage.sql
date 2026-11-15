@@ -1,0 +1,4 @@
+insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types) values('trade-documents','trade-documents',false,10485760,array['application/pdf','image/jpeg','image/png','image/webp','text/csv','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+create policy trade_read on storage.objects for select to authenticated using(bucket_id='trade-documents' and (select private.member()));
+create policy trade_upload on storage.objects for insert to authenticated with check(bucket_id='trade-documents' and (select private.role()) in('admin','sales','procurement') and (storage.foldername(name))[1]=(select auth.uid())::text);
+create policy trade_delete on storage.objects for delete to authenticated using(bucket_id='trade-documents' and((select private.role())='admin' or((select private.role()) in('sales','procurement') and(storage.foldername(name))[1]=(select auth.uid())::text)));
