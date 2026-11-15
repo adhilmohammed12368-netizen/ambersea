@@ -1,0 +1,1 @@
+export function quickTrade(input:{quantity_kg:string|number;purchase_per_kg:string|number;selling_per_kg:string|number;other_costs:string|number;currency:string}):{purchase_total:number;total_cost:number;revenue:number;gross_profit:number;profit_per_kg:number;break_even_per_kg:number;margin_percent:number|null;markup_percent:number|null};
