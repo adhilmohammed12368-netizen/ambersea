@@ -25,3 +25,32 @@
 
 /* Data reliability and first-deployment diagnostics */
 .cloud-state{white-space:nowrap;border-radius:7px;padding:6px 9px;border:1px solid #cee6db;font-size:11px;color:#206654;background:#eef8f2}.cloud-state.is-offline{border-color:#f4c3b5;color:#8c392d;background:#fff2ed}.setup-page{min-height:100vh;display:grid;place-items:center;padding:22px;background:#f3f6f8}.setup-card{max-width:680px;background:#fff;border:1px solid #dce6e9;border-radius:14px;padding:34px;box-shadow:0 20px 65px #1232}.setup-card h1{font-size:28px;margin:8px 0}.setup-card p,.setup-card li{font-size:14px;line-height:1.8}.setup-card code{padding:2px 5px;background:#f1f4f7;border-radius:4px}.setup-card ol{padding-left:22px}.loading>div{max-width:500px;padding:24px;text-align:center}.loading button{margin:8px}.loading p{line-height:1.6}@media(max-width:720px){.cloud-state{display:none}.setup-card{padding:22px}}
+
+
+/* Costing & Profit: fast estimates up front; detailed export economics on demand. */
+.quick-costing{padding:27px}.quick-costing>h3{font-size:20px;margin:7px 0 8px}
+.quick-costing-tabs,.quick-costing-method{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0}
+.quick-costing-tabs button.active,.quick-costing-method button.active{background:var(--nav);color:white}
+.quick-costing-grid{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(300px,.94fr);gap:24px}
+.quick-costing-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
+.quick-costing-fields label.wide{grid-column:1/-1}
+.quick-costing-fields small{display:block;margin-top:5px}
+.quick-costing-result{background:linear-gradient(145deg,#faf9f5,#f6f0e8);border-radius:11px;padding:22px;min-width:0;border:1px solid var(--line)}
+.quick-costing-amount{font:800 clamp(27px,3vw,42px)/1.2 Manrope,'DM Sans',sans-serif;color:#16775b;letter-spacing:-.05em;margin:20px 0;overflow-wrap:anywhere}
+.quick-costing-amount.is-loss{color:#ab3e36}
+.quick-costing-metrics>div{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:9px 0;border-bottom:1px solid #dfdcd3;font-size:12px}
+.quick-costing-metrics span{color:#6c7d86}.quick-costing-metrics strong{color:#233546;text-align:right}
+.quick-costing-save{border-top:1px solid #dfdcd3;margin-top:22px;padding-top:19px}
+.quick-costing-save button{width:100%}
+.quick-costing-empty{min-height:220px;display:flex;align-items:center;justify-content:center;gap:10px;flex-direction:column;text-align:center;color:#7c8e98}
+.quick-costing-empty strong{color:#344f60}.quick-costing-empty p{margin:0}
+.quick-costing-agreement{padding-top:12px;margin-bottom:18px}.quick-costing-agreement summary{cursor:pointer}
+.advanced-costing>summary{display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:14px;list-style:none}
+.advanced-costing>summary::-webkit-details-marker{display:none}
+.advanced-costing>summary strong{font-size:16px;color:#21384a}
+.advanced-costing>summary span{font-size:11px;color:#667f90;display:flex;align-items:center;gap:10px}
+.advanced-costing[open]>summary{padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.advanced-costing[open]>summary svg{transform:rotate(90deg)}
+.advanced-costing .panel{padding:18px}
+@media(max-width:1100px){.quick-costing-grid{grid-template-columns:1fr}}
+@media(max-width:720px){.quick-costing{padding:18px}.quick-costing-fields{grid-template-columns:1fr}.quick-costing-result{padding:17px}.quick-costing-tabs button{flex:1}.advanced-costing>summary{align-items:flex-start;flex-direction:column}.advanced-costing>summary span{flex-wrap:wrap}}
