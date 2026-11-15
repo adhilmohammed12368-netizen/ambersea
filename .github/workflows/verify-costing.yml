@@ -1,4 +1,4 @@
-name: Verify Ambersea Costing
+name: Verify Ambersea Trade Desk
 on:
   pull_request:
     branches: [main]
@@ -27,6 +27,6 @@ jobs:
       - name: Install exact dependencies
         run: npm ci
       - name: Unit tests
-        run: npm run test:unit && node --test tests/quick-costing.test.mjs
+        run: npm run test:unit && node --test tests/quick-costing.test.mjs tests/trade-documents.test.mjs
       - name: Production build
         run: npm run build
