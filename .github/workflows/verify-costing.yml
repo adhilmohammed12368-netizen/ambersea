@@ -1,0 +1,32 @@
+name: Verify Ambersea Costing
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Ambersea_Trade_Desk_Release_Candidate_2026-11-15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: Ambersea_Trade_Desk_Release_Candidate_2026-11-15/package-lock.json
+      - name: Install exact dependencies
+        run: npm ci
+      - name: Unit tests
+        run: npm run test:unit && node --test tests/quick-costing.test.mjs
+      - name: Production build
+        run: npm run build
