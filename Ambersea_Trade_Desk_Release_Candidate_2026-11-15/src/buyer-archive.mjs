@@ -11,6 +11,7 @@ export const BUYER_CHILDREN=Object.freeze([
  {table:'documents',label:'Documents'}
 ]);
 export function isArchivedBuyer(buyer){return typeof buyer?.source_data?.[ARCHIVE_FIELD]==='string'&&buyer.source_data[ARCHIVE_FIELD].length>0}
+export function buyersForView(buyers,view='active'){if(!['active','archived'].includes(view))throw Error('Choose active or archived buyers.');return (buyers||[]).filter(b=>isArchivedBuyer(b)===(view==='archived'));}
 export function archiveBuyerData(existing,iso){
  const src=existing&&typeof existing==='object'&&!Array.isArray(existing)?existing:{};
  if(typeof iso!=='string'||!Number.isFinite(Date.parse(iso)))throw Error('Valid archive date required.');
