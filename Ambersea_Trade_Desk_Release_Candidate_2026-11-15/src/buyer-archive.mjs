@@ -17,6 +17,19 @@ export function archiveBuyerData(existing,iso){
  if(typeof iso!=='string'||!Number.isFinite(Date.parse(iso)))throw Error('Valid archive date required.');
  return {...src,[ARCHIVE_FIELD]:iso};
 }
+/** Restart a commercial sales cycle without duplicating buyers or erasing audit/history. */
+export function canStartAsNew(buyer){
+ return !!buyer&&!isArchivedBuyer(buyer)&&buyer.stage!=='Do Not Contact'&&!buyer.opt_out;
+}
+export function startAsNewPayload(buyer,iso){
+ if(!canStartAsNew(buyer))throw Error('Buyer is archived or suppressed. Restore or review contact restrictions first.');
+ if(typeof iso!=='string'||!Number.isFinite(Date.parse(iso)))throw Error('Valid restart date required.');
+ const original=buyer.source_data&&typeof buyer.source_data==='object'&&!Array.isArray(buyer.source_data)?buyer.source_data:{};
+ const previous=Array.isArray(original._trade_desk_restart_history)?original._trade_desk_restart_history.filter(x=>typeof x==='string'):[];
+ const last=original._trade_desk_restarted_at;
+ const history=last?[...previous,last]:previous;
+ return {stage:'New',score:null,next_action:null,source_data:{...original,_trade_desk_restarted_at:iso,_trade_desk_restart_history:history}};
+}
 export function restoreBuyerData(existing){
  const src=existing&&typeof existing==='object'&&!Array.isArray(existing)?{...existing}:{};
  delete src[ARCHIVE_FIELD];return src;
