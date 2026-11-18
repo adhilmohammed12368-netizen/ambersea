@@ -1,0 +1,59 @@
+name: Ambersea Browser Acceptance
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: Ambersea_Trade_Desk_Release_Candidate_2026-11-15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: Ambersea_Trade_Desk_Release_Candidate_2026-11-15/package-lock.json
+      - name: Install app packages
+        run: npm ci
+      - name: Install test browser
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          if command -v google-chrome >/dev/null 2>&1 || command -v google-chrome-stable >/dev/null 2>&1; then
+            google-chrome --version || google-chrome-stable --version
+          else
+            npx playwright install chromium
+          fi
+      - name: Compile isolated browser-test build
+        env:
+          VITE_SUPABASE_URL: https://xgjoanqeepaxfstutlfx.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_fakeregressiontesting01234567890123456789
+        run: npm run build
+      - name: Launch app and test every tab
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 --strictPort > /tmp/ambersea-preview.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          cat /tmp/ambersea-preview.log
+          curl --fail http://127.0.0.1:4173/ > /dev/null
+          node scripts/smoke-ui.mjs
+      - name: Archive UI screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ambersea-ui-smoke
+          path: /tmp/ambersea-ui/
+          if-no-files-found: ignore
+          retention-days: 7

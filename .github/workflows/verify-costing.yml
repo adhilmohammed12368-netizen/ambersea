@@ -27,6 +27,6 @@ jobs:
       - name: Install exact dependencies
         run: npm ci
       - name: Unit tests
-        run: npm run test:unit && node --test tests/quick-costing.test.mjs tests/trade-documents.test.mjs tests/communication-links.test.mjs tests/buyer-archive.test.mjs
+        run: npm test
       - name: Production build
         run: npm run build

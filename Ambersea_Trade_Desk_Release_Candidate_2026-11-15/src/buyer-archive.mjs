@@ -39,6 +39,11 @@ export function buyerReferences(data,id){
  return BUYER_CHILDREN.map(({table,label})=>({table,label,count:(data?.[table]||[]).filter(r=>r.buyer_id===id).length})).filter(x=>x.count>0);
 }
 export function buyerDeleteAllowed(data,id){return buyerReferences(data,id).length===0}
+export const BUYER_COMMERCIAL_TABLES=Object.freeze(['rfqs','quotes','orders','documents']);
+export function buyerCommercialReferences(data,id){return buyerReferences(data,id).filter(r=>BUYER_COMMERCIAL_TABLES.includes(r.table))}
+export function canDeleteWithCrm(data,id){return !!id && buyerCommercialReferences(data,id).length===0}
+export function crmDeletionSummary(data,id){const refs=buyerReferences(data,id).filter(r=>!BUYER_COMMERCIAL_TABLES.includes(r.table));return refs.map(r=>r.count+' '+r.label.toLowerCase()).join(' · ')||'No linked CRM history'}
+
 export function readableDeleteError(error){
  if(error?.code==='23503'||/foreign key constraint/i.test(error?.message||'')){
  const table=BUYER_CHILDREN.find(x=>String(error?.message||'').includes('"'+x.table+'"')||String(error?.message||'').includes(x.table+'_buyer_id_fkey'));
