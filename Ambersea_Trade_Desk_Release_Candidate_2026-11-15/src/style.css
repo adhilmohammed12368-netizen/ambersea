@@ -140,3 +140,16 @@
 .buyer-archive-toggle{display:flex!important;align-items:center;gap:8px;font-size:12px;color:#506b7d;white-space:nowrap;margin:0!important}
 .buyer-archive-toggle input{width:16px!important;height:16px!important;min-height:16px!important;flex:none;margin:0}
 @media(max-width:800px){.section-head:has(.buyer-archive-toggle){flex-wrap:wrap}.buyer-archive-toggle{order:3;width:100%}}
+
+
+/* Explicit Active/Archived CRM tabs and no-keyword confirmation dialogs */
+.buyer-view-tabs{display:flex;align-items:center;gap:9px;margin:4px 0 12px;flex-wrap:wrap}
+.buyer-view-tabs button{font-size:12px;padding:10px 15px;border:1px solid #d8e2e7}
+.buyer-view-tabs button.active{background:var(--nav);color:#fff;border-color:var(--nav)}
+.buyer-list-note{color:#667f8f;font-size:12px;line-height:1.6;margin:0 0 18px}
+.buyer-confirm-dialog>p{font-size:13px;color:#4c6270;line-height:1.6;margin:12px 0}
+.buyer-confirm-dialog>p:first-child{font-weight:700;color:#263f51}
+.buyer-confirm-dialog>.modal-footer{margin-top:24px;display:flex;justify-content:flex-end;gap:10px}
+button.danger-action{background:#af3937;border-color:#96302c;color:#fff}
+button.danger-action:hover{background:#952b2b}
+@media(max-width:650px){.buyer-view-tabs button{flex:1;min-width:125px}.buyer-confirm-dialog>.modal-footer button{flex:1}}
