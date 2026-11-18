@@ -1,5 +1,6 @@
 import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
+import {existsSync} from 'node:fs';
 import {mkdir} from 'node:fs/promises';
 
 const base='http://127.0.0.1:4173';
@@ -7,7 +8,8 @@ const project='xgjoanqeepaxfstutlfx';
 const userId='40000000-0000-0000-0000-000000000001';
 const user={id:userId,email:'adhil@ambersea.in',email_confirmed_at:'2026-11-15T00:00:00Z',role:'authenticated',app_metadata:{provider:'email',providers:['email']},user_metadata:{},aud:'authenticated',created_at:'2026-11-15T00:00:00Z'};
 const session={access_token:'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0MDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJleHAiOjQxMDI0NDQ4MDB9.signature',token_type:'bearer',expires_in:3600,expires_at:4102444800,refresh_token:'mock-refresh-token',user};
-const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const chromePath=['/usr/bin/google-chrome','/usr/bin/google-chrome-stable'].find(existsSync);
+const browser=await chromium.launch({headless:true,args:['--no-sandbox'],...(chromePath?{executablePath:chromePath}:{})});
 const page=await browser.newPage({viewport:{width:1440,height:980},acceptDownloads:true});
 let appErrors=[],requestErrors=[];
 page.on('pageerror',err=>appErrors.push(String(err)));
