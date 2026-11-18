@@ -3,6 +3,8 @@ export function isArchivedBuyer(buyer:any):boolean;
 export function buyersForView(buyers:any[],view?:'active'|'archived'):any[];
 export function archiveBuyerData(existing:any,iso:string):Record<string,any>;
 export function restoreBuyerData(existing:any):Record<string,any>;
+export function canStartAsNew(buyer:any):boolean;
+export function startAsNewPayload(buyer:any,iso:string):{stage:'New',score:null,next_action:null,source_data:Record<string,any>};
 export function buyerReferences(data:any,id:string):Array<{table:string,label:string,count:number}>;
 export function buyerDeleteAllowed(data:any,id:string):boolean;
 export function readableDeleteError(error:any):string;
