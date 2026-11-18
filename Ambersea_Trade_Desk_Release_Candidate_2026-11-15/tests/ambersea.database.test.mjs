@@ -30,11 +30,12 @@ test('unauthorized visitor cannot read the Ambersea buyer list',async()=>{
 });
 test('Agency revenue is only the commission, not the buyer purchase total',async()=>{
   const buyer=(await as('admin',"select id from buyers where name='Ambersea test buyer'")).rows[0].id;
-  const args=[buyer, 'PO-AGENCY-TEST','Buyer acceptance #123','Agency','Per kg',0.1,25500,'Exporter','Written commission agreement',85000];
-  const order=(await as('sales',"insert into orders(buyer_id,po_reference,acceptance_reference,commercial_model,commission_method,commission_rate,commission_quantity_kg,commission_payer,commission_agreement,total)values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning *",args)).rows[0];
+  // Manual orders require admin approval and order.total is database-controlled.
+  const args=[buyer, 'PO-AGENCY-TEST','Buyer acceptance #123','Agency','Per kg',0.1,25500,'Exporter','Written commission agreement'];
+  const order=(await as('admin',"insert into orders(buyer_id,po_reference,acceptance_reference,commercial_model,commission_method,commission_rate,commission_quantity_kg,commission_payer,commission_agreement)values($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *",args)).rows[0];
   assert.equal(commission(order),2550);
   assert.equal(earnings(order),2550);
-  await assert.rejects(as('sales',"insert into orders(buyer_id,po_reference,acceptance_reference,commercial_model,commission_method,commission_rate,commission_quantity_kg,total)values($1,'PO-NO-AGREEMENT','test','Agency','Per kg',0.10,25500,50000)",[buyer]));
+  await assert.rejects(as('admin',"insert into orders(buyer_id,po_reference,acceptance_reference,commercial_model,commission_method,commission_rate,commission_quantity_kg)values($1,'PO-NO-AGREEMENT','test','Agency','Per kg',0.10,25500)",[buyer]));
 });
 test('Only procurement/admin can create supplier offers; sales can create enquiries',async()=>{
   const buyer=(await as('admin',"select id from buyers where name='Ambersea test buyer'")).rows[0].id;
