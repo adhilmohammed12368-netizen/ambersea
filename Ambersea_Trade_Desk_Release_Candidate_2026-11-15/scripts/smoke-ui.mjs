@@ -98,6 +98,8 @@ try{
  assert.equal(memory.buyers.length,1,'Buyer did not persist in mock database');
  console.log('PASS buyer create and save');
  await page.reload({waitUntil:'domcontentloaded'});
+ await page.getByRole('button',{name:'Buyer CRM',exact:true}).waitFor({timeout:30000});
+ await page.getByRole('button',{name:'Buyer CRM',exact:true}).click();
  await page.getByRole('button',{name:'AMBERSEA QA Test Company',exact:true}).waitFor({timeout:30000});
  console.log('PASS buyer persists after reload');
  await page.getByRole('button',{name:'AMBERSEA QA Test Company',exact:true}).click();
