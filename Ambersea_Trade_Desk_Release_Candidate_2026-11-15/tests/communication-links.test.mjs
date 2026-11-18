@@ -8,3 +8,5 @@ test('Do not contact overrides message readiness',()=>{assert.equal(outreachAllo
 test('reject unsafe LinkedIn destinations',()=>{assert.equal(safeLinkedIn('https://linkedin.com/in/buyer')?.startsWith('https://'),true);assert.equal(safeLinkedIn('javascript:alert(1)'),null);assert.equal(safeLinkedIn('https://linkedin.com.evil.com/in/a'),null)});
 test('manual send log requires real evidence',()=>{assert.throws(()=>communicationPayload({buyerId:'id',channel:'WeChat',direction:'Outbound',body:'Hello'}));assert.equal(communicationPayload({buyerId:'id',channel:'Email',direction:'Outbound',body:'Hello',evidence:'Confirmed in sent folder'}).direction,'Outbound')});
 test('buyer-specific template does not invent pricing or credentials',()=>{const t=outreachTemplate({product_interests:'frozen octopus'},{name:'Mr Vinh'});assert.match(t.body,/frozen octopus/);assert.match(t.body,/Mr Vinh/);assert.doesNotMatch(t.body,/FDA certified|guaranteed price/i)});
+
+test('archived buyers are excluded from outreach',()=>{assert.equal(outreachAllowed({stage:'New',source_data:{_trade_desk_archived_at:'2026-11-18T12:00:00Z'}}),false)});

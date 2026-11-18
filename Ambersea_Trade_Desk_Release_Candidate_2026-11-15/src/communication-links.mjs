@@ -22,7 +22,7 @@ export function channelAction({channel,recipient,subject='',body='',blocked=fals
  if(channel==='WeChat'){const id=String(record.wechat||'').trim();if(!id)return{ready:false,reason:'Add a confirmed WeChat ID for this recipient.'};return{ready:true,mode:'copy',wechatId:id,label:'Copy WeChat ID'}}
  return{ready:false,reason:'Unsupported messaging channel.'};
 }
-export function outreachAllowed(buyer){return !!buyer&&!buyer.opt_out&&buyer.stage!=='Do Not Contact'}
+export function outreachAllowed(buyer){return !!buyer&&!buyer.opt_out&&buyer.stage!=='Do Not Contact'&&!buyer.source_data?._trade_desk_archived_at}
 export function outreachTemplate(buyer,recipient,brand='AMBERSEA',website='https://ambersea.in'){
  const p=String(buyer?.product_interests||'frozen seafood').trim()||'frozen seafood';
  return {subject:'Seafood sourcing enquiry',body:'Hello'+(recipient?.name?', '+recipient.name:'')+',\n\nAre you currently sourcing '+p+'? Please share the grades, packing specifications, and destination port you purchase regularly. I would be happy to review your requirements and check suitable Indian supply options.\n\nBest regards,\nAdhil Mohammad\n'+brand+'\n'+website};

@@ -130,3 +130,13 @@
 .comm-draft b,.comm-draft span{display:block}.comm-draft b{font-size:12px}.comm-draft span{font-size:11px;color:#6c828d;margin-top:6px}
 @media(max-width:1120px){.comm-layout{grid-template-columns:1fr}}
 @media(max-width:650px){.comm-tabs button{min-width:calc(50% - 5px)}.comm-actions>*{min-width:calc(50% - 6px)}.comm-contact{grid-template-columns:90px 1fr}}
+
+
+/* Buyer archive and deletion protection */
+.buyer-delete-guidance{margin:14px 0 20px;padding:16px;border:1px solid #edd3a4;background:#fffaee;border-radius:10px}
+.buyer-delete-guidance strong{display:block;color:#705024;font-size:13px}
+.buyer-delete-guidance p{color:#826b49;font-size:12px;line-height:1.5;margin:7px 0 0}
+.buyer-archived-status{padding:11px 14px;color:#4d6a7b;background:#f1f5f7;border:1px solid #d8e1e7;border-radius:8px;font-size:12px}
+.buyer-archive-toggle{display:flex!important;align-items:center;gap:8px;font-size:12px;color:#506b7d;white-space:nowrap;margin:0!important}
+.buyer-archive-toggle input{width:16px!important;height:16px!important;min-height:16px!important;flex:none;margin:0}
+@media(max-width:800px){.section-head:has(.buyer-archive-toggle){flex-wrap:wrap}.buyer-archive-toggle{order:3;width:100%}}
