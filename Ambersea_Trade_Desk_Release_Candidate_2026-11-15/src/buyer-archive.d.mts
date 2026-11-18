@@ -8,3 +8,7 @@ export function startAsNewPayload(buyer:any,iso:string):{stage:'New',score:null,
 export function buyerReferences(data:any,id:string):Array<{table:string,label:string,count:number}>;
 export function buyerDeleteAllowed(data:any,id:string):boolean;
 export function readableDeleteError(error:any):string;
+export const BUYER_COMMERCIAL_TABLES:ReadonlyArray<string>;
+export function buyerCommercialReferences(data:any,id:string):Array<{table:string,label:string,count:number}>;
+export function canDeleteWithCrm(data:any,id:string):boolean;
+export function crmDeletionSummary(data:any,id:string):string;
