@@ -15,7 +15,7 @@ let appErrors=[],requestErrors=[];
 page.on('pageerror',err=>appErrors.push(String(err)));
 page.on('console',msg=>{if(msg.type()==='error')requestErrors.push(msg.text())});
 await page.addInitScript(({project,session})=>{
- localStorage.setItem('sb-'+project+'-auth-token',JSON.stringify(session));
+ if(location.hostname==='127.0.0.1')localStorage.setItem('sb-'+project+'-auth-token',JSON.stringify(session));
 },{project,session});
 await page.route('https://'+project+'.supabase.co/**',async route=>{
  const req=route.request(),url=new URL(req.url());
